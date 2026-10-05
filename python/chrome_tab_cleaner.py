@@ -15,20 +15,28 @@ transient, obsolete, completed, disposable, error, or low-value pages.
 Use REVIEW whenever uncertain. Never close a page merely because it is old.'''
 
 APPLE_GET_TABS = '''
+set delim to ASCII character 9
+
 tell application "Google Chrome"
     set output to ""
     set winIndex to 0
+
     repeat with w in windows
         set winIndex to winIndex + 1
         set tabIndex to 0
+
         repeat with t in tabs of w
             set tabIndex to tabIndex + 1
             set tabTitle to title of t
             set tabURL to URL of t
-            set isPinned to pinned of t
-            set output to output & winIndex & tab & tabIndex & tab & isPinned & tab & tabTitle & tab & tabURL & linefeed
+
+            -- Chrome does not expose pinned reliably through AppleScript
+            set isPinned to false
+
+            set output to output & winIndex & delim & tabIndex & delim & isPinned & delim & tabTitle & delim & tabURL & linefeed
         end repeat
     end repeat
+
     return output
 end tell
 '''
